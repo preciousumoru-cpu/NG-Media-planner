@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jumia Smart Media Plan Builder 2026</title>
+  <style>
+    :root {
+      --jumia-orange: #F68B1E;
+      --jumia-orange-hover: #E0770D;
+      --navy-header: #073763;
+      --navy-dark: #0B2545;
+      --navy-light: #1F497D;
+      --onsite-bg: #E7EEFA;
+      --onsite-border: #A4C2F4;
+      --display-bg: #EBF4E8;
+      --display-border: #B7D7A8;
+      --crm-bg: #FFF9E6;
+      --crm-border: #FFE599;
+      --spon-bg: #F0EDF7;
+      --spon-border: #D9D2E9;
+      --pom-bg: #FDF1E5;
+      --pom-border: #F9CB9C;
+      --text-dark: #222222;
+      --text-muted: #666666;
+      --border-gray: #E0E0E0;
+      --success-green: #2E7D32;
+      --warning-amber: #ED6C02;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #F8F9FA; color: var(--text-dark); padding: 18px 24px; line-height: 1.45; }
+    
+    /* Header */
+    .header { background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-header) 100%); color: white; padding: 20px 28px; border-radius: 10px; margin-bottom: 22px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+    .header h1 { font-size: 21px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .header h1 span { color: var(--jumia-orange); }
+    .header p { font-size: 13px; opacity: 0.88; margin-top: 4px; }
+    .btn-export { background: var(--jumia-orange); color: white; border: none; padding: 10px 20px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 6px rgba(246,139,30,0.3); display: flex; align-items: center; gap: 6px; }
+    .btn-export:hover { background: var(--jumia-orange-hover); transform: translateY(-1px); }
+
+    /* Layout */
+    .grid-container { display: grid; grid-template-columns: 340px 1fr; gap: 22px; }
+    @media (max-width: 1100px) { .grid-container { grid-template-columns: 1fr; } }
+
+    /* Cards */
+    .card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border-gray); margin-bottom: 20px; }
+    .card h2 { font-size: 14px; font-weight: 700; color: var(--navy-header); margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #EEF2F7; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* Form Inputs */
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: #444; margin-bottom: 5px; }
+    .form-control { width: 100%; padding: 8px 11px; font-size: 13px; border: 1px solid #CCC; border-radius: 6px; outline: none; background: #FAFAFA; transition: 0.2s; }
+    .form-control:focus { border-color: var(--jumia-orange); background: white; box-shadow: 0 0 0 2px rgba(246,139,30,0.15); }
+    
+    .currency-toggle { display: flex; border: 1px solid #CCC; border-radius: 6px; overflow: hidden; margin-bottom: 14px; }
+    .currency-toggle button { flex: 1; padding: 7px; font-size: 12px; font-weight: 700; border: none; background: #F0F0F0; cursor: pointer; transition: 0.2s; }
+    .currency-toggle button.active { background: var(--navy-header); color: white; }
+
+    /* Multi-Goal Checkboxes */
+    .checkbox-group { display: flex; flex-direction: column; gap: 7px; background: #FDFDFD; padding: 10px 12px; border: 1px solid #E5E5E5; border-radius: 6px; margin-bottom: 12px; }
+    .checkbox-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; cursor: pointer; }
+    .checkbox-item input[type="checkbox"] { margin-top: 2px; accent-color: var(--jumia-orange); width: 15px; height: 15px; cursor: pointer; }
+    .checkbox-item span.title { font-weight: 600; color: #222; }
+    .checkbox-item span.desc { display: block; font-size: 11px; color: #777; margin-top: 1px; }
+    .other-input-container { margin-top: 6px; padding-left: 24px; display: none; }
+
+    /* Historical Channels Box */
+    .accordion-toggle { font-size: 12px; font-weight: 700; color: var(--navy-light); cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; background: #F0F4FA; border-radius: 6px; border: 1px solid #D9E2EC; margin-bottom: 10px; }
+    .accordion-toggle:hover { background: #E4ECF7; }
+    .historical-content { background: #FCFCFD; border: 1px solid #E5E9F0; border-radius: 6px; padding: 10px 12px; display: none; margin-bottom: 14px; }
+    .historical-grid { display: grid; grid-template-columns: 1fr; gap: 6px; font-size: 11px; }
+
+    /* Pacing Guardrail Banner */
+    .pacing-banner { background: #EBF3FB; border: 1px solid #BDD7EE; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px; font-size: 11.5px; color: #1F497D; }
+    .pacing-banner strong { color: #0C3E75; display: block; margin-bottom: 2px; font-size: 12px; }
+
+    /* KPI Cards */
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .kpi-card { background: white; border-radius: 8px; padding: 14px 16px; border: 1px solid var(--border-gray); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+    .kpi-card .label { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+    .kpi-card .val { font-size: 19px; font-weight: 800; color: var(--navy-header); margin-top: 3px; }
+    .kpi-card .sub { font-size: 11px; color: var(--success-green); margin-top: 2px; font-weight: 600; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+    th { background-color: var(--navy-header); color: white; font-weight: 600; padding: 9px 11px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; }
+    td { padding: 9px 11px; border-bottom: 1px solid #EBEBEB; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+
+    /* Tags */
+    .tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+    .tag-onsite { background: var(--onsite-border); color: #0C3E75; }
+    .tag-display { background: var(--display-border); color: #2E5A1E; }
+    .tag-crm { background: var(--crm-border); color: #8C6B00; }
+    .tag-spon { background: var(--spon-border); color: #4A2E75; }
+    .tag-pom { background: var(--pom-border); color: #A04A00; }
+    
+    .badge-proven { background: #FFE8D6; color: #B25900; font-size: 9.5px; padding: 2px 5px; border-radius: 3px; font-weight: 800; border: 1px solid #FFCC99; margin-left: 4px; }
+    .badge-discrete { background: #E8F4FD; color: #0D6EFD; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; border: 1px solid #B6D4FE; }
+    .badge-continuous { background: #E8F5E9; color: #198754; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; border: 1px solid #C3E6CB; }
+
+    /* Gantt */
+    .gantt-scroll { overflow-x: auto; margin-top: 8px; }
+    .gantt-table th, .gantt-table td { text-align: center; padding: 6px 7px; min-width: 30px; font-size: 11px; }
+    .gantt-table td.active-day { background-color: #B5D2FF; color: #073763; font-weight: bold; }
+    .gantt-table td.inactive-day { color: #CCC; }
+
+    .footer { text-align: center; font-size: 12px; color: #888; margin-top: 24px; padding-top: 12px; border-top: 1px solid #E0E0E0; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1><span>JUMIA</span> Advertising &bull; Smart Media Plan Builder 2026</h1>
+      <p>Discrete Rate Card Enforcement &bull; Duration Pacing &bull; Multi-Goal Optimization</p>
+    </div>
+    <button class="btn-export" onclick="exportPlanCSV()">&#11015; Export Plan (CSV / Excel)</button>
+  </div>
+
+  <div class="grid-container">
+    <!-- LEFT PANEL: CONTROLS & BRIEF -->
+    <div>
+      <div class="card">
+        <h2>Campaign Configuration</h2>
+
+        <!-- Currency Toggle -->
+        <div class="form-group">
+          <label>Campaign Currency</label>
+          <div class="currency-toggle">
+            <button id="curr-ngn" class="active" onclick="setCurrency('NGN')">₦ NGN</button>
+            <button id="curr-usd" onclick="setCurrency('USD')">$ USD</button>
+          </div>
+        </div>
+
+        <!-- Brand Name & Category -->
+        <div class="form-group">
+          <label>Brand / Partner Name</label>
+          <input type="text" id="brand-name" class="form-control" value="Nivea Official Store" oninput="calculatePlan()">
+        </div>
+
+        <div class="form-group">
+          <label>Focus Category</label>
+          <select id="brand-cat" class="form-control" onchange="calculatePlan()">
+            <option value="Health & Beauty">Health & Beauty</option>
+            <option value="Phones & Tablets">Phones & Tablets</option>
+            <option value="Electronics & Appliances">Electronics & Appliances</option>
+            <option value="Supermarket & FMCG">Supermarket & FMCG</option>
+            <option value="Fashion & Apparel">Fashion & Apparel</option>
+            <option value="Home & Living">Home & Living</option>
+          </select>
+        </div>
+
+        <!-- Budget & Duration -->
+        <div class="form-group">
+          <label id="budget-label">Total Campaign Budget (₦ NGN)</label>
+          <input type="number" id="campaign-budget" class="form-control" value="1400000" step="50000" oninput="calculatePlan()">
+        </div>
+
+        <div class="form-group">
+          <label>Campaign Duration: <strong id="duration-val">30</strong> Days</label>
+          <input type="range" id="campaign-duration" min="3" max="30" value="30" style="width:100%" oninput="updateDuration(this.value)">
+          <div style="display:flex; justify-content:space-between; font-size:10px; color:#888; margin-top:2px;">
+            <span>3 Days</span>
+            <span>7 Days</span>
+            <span>14 Days</span>
+            <span>30 Days (Full Month)</span>
+          </div>
+        </div>
+
+        <!-- MULTI-GOAL SELECTION (CHECKBOXES + OTHER) -->
+        <div class="form-group">
+          <label>Partner Strategic Goals (Select All That Apply)</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" id="goal-sales" checked onchange="calculatePlan()">
+              <div>
+                <span class="title">Sales Uplift &amp; Direct Orders</span>
+                <span class="desc">Conversions, SKU orders, checkout push &amp; high ROAS</span>
+              </div>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" id="goal-consideration" checked onchange="calculatePlan()">
+              <div>
+                <span class="title">Consideration &amp; Intent</span>
+                <span class="desc">Product detail page (PDP) visits, search intent &amp; clicks</span>
+              </div>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" id="goal-awareness" onchange="calculatePlan()">
+              <div>
+                <span class="title">Awareness &amp; Brand Equity</span>
+                <span class="desc">Homepage visibility, reach, impressions &amp; brand top-of-mind</span>
+              </div>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" id="goal-other" onchange="toggleOtherGoal()">
+              <div>
+                <span class="title">Other / Custom Specific Goal</span>
+                <span class="desc">Specify custom target (e.g. Clearance, New Launch)</span>
+              </div>
+            </label>
+            <div id="other-input-container" class="other-input-container">
+              <input type="text" id="goal-other-text" class="form-control" placeholder="Enter custom goal (e.g. Stock Clearance, New Store Launch)..." oninput="calculatePlan()">
+            </div>
+          </div>
+        </div>
+
+        <!-- RATE CARD STANDARD PRICING GUARANTEE -->
+        <div class="pacing-banner">
+          <strong>&#10004; Standard Rate Card Enforcement</strong>
+          <span>Fixed inventory (Weeks, Days, Insertions) is strictly booked in whole standard units. Flexible channels (CPM/CPC) absorb remainder for exact 100% budget reconciliation.</span>
+        </div>
+
+        <!-- HISTORICAL CHANNELS SECTION (WHAT WORKED HISTORICALLY) -->
+        <div class="accordion-toggle" onclick="toggleHistorical()">
+          <span>&#128338; Historical Proven Channels (Optional)</span>
+          <span id="historical-arrow">&#9660;</span>
+        </div>
+        <div id="historical-content" class="historical-content">
+          <p style="font-size:11px; color:#555; margin-bottom:8px;">Select channels that worked well historically to boost their priority in this plan:</p>
+          <div class="historical-grid">
+            <label><input type="checkbox" class="hist-check" value="spon_products" onchange="calculatePlan()"> Sponsored Products (Catalog PPC)</label>
+            <label><input type="checkbox" class="hist-check" value="disp_search" onchange="calculatePlan()"> Search Display Banners</label>
+            <label><input type="checkbox" class="hist-check" value="disp_pdp" onchange="calculatePlan()"> Competitor PDP Banners</label>
+            <label><input type="checkbox" class="hist-check" value="crm_push" onchange="calculatePlan()"> App Push Notifications</label>
+            <label><input type="checkbox" class="hist-check" value="disp_checkout" onchange="calculatePlan()"> Checkout Success Banner</label>
+            <label><input type="checkbox" class="hist-check" value="cat_floor" onchange="calculatePlan()"> Category Product Floor</label>
+            <label><input type="checkbox" class="hist-check" value="cat_banner" onchange="calculatePlan()"> Category Single Banner</label>
+            <label><input type="checkbox" class="hist-check" value="crm_nl_sku" onchange="calculatePlan()"> Newsletter SKU Insertions</label>
+            <label><input type="checkbox" class="hist-check" value="hp_floor" onchange="calculatePlan()"> Homepage Product Floor</label>
+            <label><input type="checkbox" class="hist-check" value="hp_slider" onchange="calculatePlan()"> Homepage Slider (Slot 3/4)</label>
+          </div>
+        </div>
+
+        <!-- Commercial Event -->
+        <div class="form-group">
+          <label>Calendar Event / Campaign Window</label>
+          <select id="event-type" class="form-control" onchange="calculatePlan()">
+            <option value="bau">Standard BAU Month (Even Pacing / Payday Spikes)</option>
+            <option value="t1_tech">March - Tech Week (Tier 1 Mega)</option>
+            <option value="t1_anniversary">June - Jumia Anniversary (Tier 1 Mega)</option>
+            <option value="t1_blackfriday">November - Black Friday (Tier 1 Super)</option>
+            <option value="t2_valentines">February - Valentine's Day (Tier 2)</option>
+            <option value="t2_easter">April - Easter &amp; Eid Sale (Tier 2)</option>
+            <option value="t2_bts">August - Back to School (Tier 2)</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: PLAN OUTPUTS -->
+    <div>
+      <!-- KPI SUMMARY CARDS -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="label">Total Budget</div>
+          <div class="val" id="kpi-budget">₦1,400,000</div>
+          <div class="sub" id="kpi-daily-rate">Daily Run: ₦46,667 / day</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Est. Impressions</div>
+          <div class="val" id="kpi-impressions">0</div>
+          <div class="sub">Total Estimated Ad Views</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Est. Traffic / Clicks</div>
+          <div class="val" id="kpi-clicks">0</div>
+          <div class="sub">Direct Product &amp; Store Visits</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Est. Blended CTR</div>
+          <div class="val" id="kpi-ctr">0.00%</div>
+          <div class="sub">Above Benchmark Average</div>
+        </div>
+      </div>
+
+      <!-- MAIN MEDIA PLAN TABLE -->
+      <div class="card">
+        <h2>
+          <span>Recommended Channel &amp; Placement Allocation</span>
+          <span id="active-goals-summary" style="font-size:11px; font-weight:600; color:var(--jumia-orange); text-transform:none;"></span>
+        </h2>
+        <div style="overflow-x: auto;">
+          <table id="plan-table">
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Placement</th>
+                <th>Strategic Objective</th>
+                <th>Targeting / Logic</th>
+                <th>2026 Rate Card</th>
+                <th>Booked Volume</th>
+                <th style="text-align:right">Allocated Budget</th>
+                <th style="text-align:right">Est. Impressions</th>
+                <th style="text-align:right">Est. Clicks</th>
+                <th>Coverage Duration</th>
+              </tr>
+            </thead>
+            <tbody id="plan-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+            <tfoot>
+              <tr style="background:#073763; color:white; font-weight:bold;">
+                <td colspan="6" style="text-align:right; padding:10px;">RECONCILED MEDIA PLAN TOTAL:</td>
+                <td id="foot-budget" style="text-align:right; padding:10px;">₦0</td>
+                <td id="foot-impressions" style="text-align:right; padding:10px;">0</td>
+                <td id="foot-clicks" style="text-align:right; padding:10px;">0</td>
+                <td id="foot-coverage" style="padding:10px;">100% Reconciled</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- EXCLUDED PLACEMENTS LOG -->
+      <div class="card" id="excluded-card" style="display:none; border-left:4px solid #D9534F;">
+        <h2 style="color:#B02A37; border-bottom-color:#F8D7DA;">
+          <span>Placements Not Included Due to Budget Pacing</span>
+          <span style="font-size:11px; text-transform:none; font-weight:500; color:#777;">(Prevents single placement from consuming entire budget)</span>
+        </h2>
+        <p style="font-size:12px; color:#555; margin-bottom:10px;">
+          The following placements require a higher minimum budget to sustain a <strong><span class="days-span">30</span>-day</strong> duration. 100% of available funds were deployed into higher-efficiency channels:
+        </p>
+        <table style="background:#FDF8F8;">
+          <thead>
+            <tr style="background:#8C1D1D;">
+              <th>Channel</th>
+              <th>Placement</th>
+              <th>Standard Rate</th>
+              <th>Why Excluded for this Budget</th>
+            </tr>
+          </thead>
+          <tbody id="excluded-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- DAILY FLIGHTING GANTT -->
+      <div class="card">
+        <h2>
+          <span>Daily Flighting &amp; Execution Schedule</span>
+          <span style="font-size:11px; color:#666; font-weight:600; text-transform:none;"><span class="days-span">30</span> Days Flighting</span>
+        </h2>
+        <div class="gantt-scroll">
+          <table class="gantt-table" id="gantt-table">
+            <thead id="gantt-thead"></thead>
+            <tbody id="gantt-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    Jumia Advertising Media Plan Builder &bull; Sourced from Official 2026 Rate Card &bull; Discrete Units &amp; Duration Pacing Engine
+  </div>
+
+  <script>
+    let currentCurrency = 'NGN';
+    const FX_RATE = 1500; // 1 USD = 1,500 NGN for 2026 Rate Card conversions
+
+    // MASTER 2026 INVENTORY DEFINITIONS
+    const CHANNELS_CATALOG = [
+      // 1. FIXED DISCRETE CHANNELS (Must be exact integer multiples of rate & duration)
+      {
+        id: 'hp_slider',
+        channel: 'Onsite',
+        tag: 'tag-onsite',
+        placement: 'Homepage Slider (Slot 3/4)',
+        obj: 'Awareness & Equity',
+        targeting: 'Homepage Broad Audience',
+        rateNGN: 975000,
+        rateUSD: 650,
+        unitLabel: '1 Day',
+        unitType: 'fixed',
+        unitDays: 1,
+        ctr: 0.0042,
+        baseImpsPerUnit: 250000,
+        minBudgetRequiredNGN: 3800000, // Only book if budget >= 3.8M so 1 day slider is <= 25% of budget
+        scores: { sales: 2, consideration: 4, awareness: 10, other: 4 },
+        activeDayLogic: (units, totalDays) => [1, 2].slice(0, units)
+      },
+      {
+        id: 'hp_floor',
+        channel: 'Onsite',
+        tag: 'tag-onsite',
+        placement: 'Homepage Product Floor',
+        obj: 'Sales Uplift',
+        targeting: 'Hero Deals on Jumia Homepage',
+        rateNGN: 525000,
+        rateUSD: 350,
+        unitLabel: '3 Days',
+        unitType: 'fixed',
+        unitDays: 3,
+        ctr: 0.0070,
+        baseImpsPerUnit: 350000,
+        minBudgetRequiredNGN: 2000000,
+        scores: { sales: 9, consideration: 5, awareness: 5, other: 5 },
+        activeDayLogic: (units, totalDays) => [1, 2, 3]
+      },
+      {
+        id: 'cat_banner',
+        channel: 'Onsite',
+        tag: 'tag-onsite',
+        placement: 'Category Single Banner',
+        obj: 'Consideration',
+        targeting: 'Category Aisle Shoppers',
+        rateNGN: 420000,
+        rateUSD: 280,
+        unitLabel: '1 Week',
+        unitType: 'fixed',
+        unitDays: 7,
+        ctr: 0.0103,
+        baseImpsPerUnit: 120000,
+        minBudgetRequiredNGN: 1000000,
+        scores: { sales: 4, consideration: 9, awareness: 6, other: 5 },
+        activeDayLogic: (units, totalDays) => Array.from({length: Math.min(totalDays, units * 7)}, (_, i) => i + 1)
+      },
+      {
+        id: 'cat_floor',
+        channel: 'Onsite',
+        tag: 'tag-onsite',
+        placement: 'Category Product Floor',
+        obj: 'Sales Uplift',
+        targeting: 'Browsing Category Shoppers',
+        rateNGN: 210000,
+        rateUSD: 140,
+        unitLabel: '1 Week',
+        unitType: 'fixed',
+        unitDays: 7,
+        ctr: 0.0089,
+        baseImpsPerUnit: 100000,
+        minBudgetRequiredNGN: 600000,
+        scores: { sales: 8, consideration: 6, awareness: 3, other: 5 },
+        activeDayLogic: (units, totalDays) => Array.from({length: Math.min(totalDays, units * 7)}, (_, i) => i + 1)
+      },
+      {
+        id: 'crm_push',
+        channel: 'CRM',
+        tag: 'tag-crm',
+        placement: 'App Push Notification',
+        obj: 'Sales Uplift',
+        targeting: '3 Hyper-personalized Audience Logics',
+        rateNGN: 525000,
+        rateUSD: 350,
+        unitLabel: '1 Experiment (3 Logics)',
+        unitType: 'fixed',
+        unitDays: 1,
+        ctr: 0.0103,
+        baseImpsPerUnit: 500000,
+        minBudgetRequiredNGN: 1800000,
+        scores: { sales: 9, consideration: 5, awareness: 4, other: 5 },
+        activeDayLogic: (units, totalDays) => [1, Math.min(15, totalDays)].slice(0, units)
+      },
+      {
+        id: 'crm_nl_sku',
+        channel: 'CRM',
+        tag: 'tag-crm',
+        placement: 'Newsletter SKU Insertion',
+        obj: 'Sales Uplift',
+        targeting: 'Active Buyers Segmented Deals Grid',
+        rateNGN: 210000,
+        rateUSD: 140,
+        unitLabel: '1 Insertion',
+        unitType: 'fixed',
+        unitDays: 1,
+        ctr: 0.0039,
+        baseImpsPerUnit: 180000,
+        minBudgetRequiredNGN: 500000,
+        scores: { sales: 7, consideration: 5, awareness: 2, other: 4 },
+        activeDayLogic: (units, totalDays) => [Math.min(7, totalDays)]
+      },
+
+      // 2. FLEXIBLE PERFORMANCE CHANNELS (CPM / CPC - Scale dynamically across 30 days)
+      {
+        id: 'disp_search',
+        channel: 'Display Ads',
+        tag: 'tag-display',
+        placement: 'Search Display Banner',
+        obj: 'Consideration & Intent',
+        targeting: 'Top 10 Category Search Terms',
+        rateNGN: 3750,
+        rateUSD: 2.5,
+        unitLabel: 'CPM',
+        unitType: 'flexible',
+        ctr: 0.0199,
+        minBudgetRequiredNGN: 0,
+        scores: { sales: 8, consideration: 10, awareness: 4, other: 6 },
+        activeDayLogic: (units, totalDays) => Array.from({length: totalDays}, (_, i) => i + 1)
+      },
+      {
+        id: 'disp_pdp',
+        channel: 'Display Ads',
+        tag: 'tag-display',
+        placement: 'Competitor PDP Banner',
+        obj: 'Consideration & Sales',
+        targeting: 'Direct Competitors & Cross-Sell PDPs',
+        rateNGN: 3750,
+        rateUSD: 2.5,
+        unitLabel: 'CPM',
+        unitType: 'flexible',
+        ctr: 0.0163,
+        minBudgetRequiredNGN: 0,
+        scores: { sales: 9, consideration: 8, awareness: 3, other: 6 },
+        activeDayLogic: (units, totalDays) => Array.from({length: totalDays}, (_, i) => i + 1)
+      },
+      {
+        id: 'disp_checkout',
+        channel: 'Display Ads',
+        tag: 'tag-display',
+        placement: 'Checkout Success Banner',
+        obj: 'Sales Uplift',
+        targeting: 'Shoppers at Point of Conversion',
+        rateNGN: 4950,
+        rateUSD: 3.3,
+        unitLabel: 'CPM',
+        unitType: 'flexible',
+        ctr: 0.0494,
+        minBudgetRequiredNGN: 0,
+        scores: { sales: 8, consideration: 4, awareness: 1, other: 4 },
+        activeDayLogic: (units, totalDays) => Array.from({length: Math.max(1, Math.floor(totalDays / 2))}, (_, i) => Math.floor(totalDays / 2) + i + 1)
+      },
+      {
+        id: 'spon_products',
+        channel: 'Sponsored Ads',
+        tag: 'tag-spon',
+        placement: 'Sponsored Products (Catalog PPC)',
+        obj: 'Sales Uplift',
+        targeting: 'Hero SKUs Slot #2 & Every 5th Slot',
+        rateNGN: 75,
+        rateUSD: 0.05,
+        unitLabel: 'CPC Bid',
+        unitType: 'flexible',
+        ctr: 0.0250,
+        minBudgetRequiredNGN: 0,
+        scores: { sales: 10, consideration: 5, awareness: 1, other: 6 },
+        activeDayLogic: (units, totalDays) => Array.from({length: totalDays}, (_, i) => i + 1)
+      }
+    ];
+
+    function toggleHistorical() {
+      const content = document.getElementById('historical-content');
+      const arrow = document.getElementById('historical-arrow');
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+        arrow.innerHTML = '&#9660;';
+      } else {
+        content.style.display = 'block';
+        arrow.innerHTML = '&#9650;';
+      }
+    }
+
+    function toggleOtherGoal() {
+      const isChecked = document.getElementById('goal-other').checked;
+      const cont = document.getElementById('other-input-container');
+      cont.style.display = isChecked ? 'block' : 'none';
+      calculatePlan();
+    }
+
+    function setCurrency(curr) {
+      if (currentCurrency === curr) return;
+      const bInput = document.getElementById('campaign-budget');
+      let val = parseFloat(bInput.value) || 0;
+      if (curr === 'USD') {
+        val = Math.round(val / FX_RATE);
+        document.getElementById('curr-usd').classList.add('active');
+        document.getElementById('curr-ngn').classList.remove('active');
+        document.getElementById('budget-label').innerText = 'Total Campaign Budget ($ USD)';
+      } else {
+        val = Math.round(val * FX_RATE);
+        document.getElementById('curr-ngn').classList.add('active');
+        document.getElementById('curr-usd').classList.remove('active');
+        document.getElementById('budget-label').innerText = 'Total Campaign Budget (₦ NGN)';
+      }
+      currentCurrency = curr;
+      bInput.value = val;
+      calculatePlan();
+    }
+
+    function updateDuration(val) {
+      document.getElementById('duration-val').innerText = val;
+      const daySpans = document.querySelectorAll('.days-span');
+      daySpans.forEach(s => s.innerText = val);
+      calculatePlan();
+    }
+
+    function fmtMoney(val) {
+      if (currentCurrency === 'USD') {
+        return '$' + Math.round(val).toLocaleString();
+      }
+      return '₦' + Math.round(val).toLocaleString();
+    }
+
+    let currentCalculatedRows = [];
+
+    function calculatePlan() {
+      const rawBudget = parseFloat(document.getElementById('campaign-budget').value) || 0;
+      const duration = parseInt(document.getElementById('campaign-duration').value) || 30;
+      const budgetInNGN = currentCurrency === 'USD' ? rawBudget * FX_RATE : rawBudget;
+
+      // Update Daily Pace KPI
+      const dailyRate = duration > 0 ? rawBudget / duration : 0;
+      document.getElementById('kpi-daily-rate').innerText = `Daily Pace: ${fmtMoney(dailyRate)} / day`;
+
+      // 1. COLLECT GOALS
+      const goalSales = document.getElementById('goal-sales').checked;
+      const goalConsideration = document.getElementById('goal-consideration').checked;
+      const goalAwareness = document.getElementById('goal-awareness').checked;
+      const goalOther = document.getElementById('goal-other').checked;
+      const otherText = document.getElementById('goal-other-text').value.trim();
+
+      let activeGoals = [];
+      if (goalSales) activeGoals.push('sales');
+      if (goalConsideration) activeGoals.push('consideration');
+      if (goalAwareness) activeGoals.push('awareness');
+      if (goalOther) activeGoals.push('other');
+
+      let activeLabels = [];
+      if (goalSales) activeLabels.push('Sales Uplift');
+      if (goalConsideration) activeLabels.push('Consideration');
+      if (goalAwareness) activeLabels.push('Awareness');
+      if (goalOther) activeLabels.push(otherText ? `Other (${otherText})` : 'Custom Goal');
+
+      if (activeGoals.length === 0) {
+        document.getElementById('active-goals-summary').innerText = 'Please select at least one goal';
+        return;
+      }
+      document.getElementById('active-goals-summary').innerText = `Active Goals: ${activeLabels.join(' + ')}`;
+
+      // 2. COLLECT HISTORICAL PROVEN CHANNELS
+      const historicalChecks = document.querySelectorAll('.hist-check:checked');
+      const historicalSet = new Set();
+      historicalChecks.forEach(cb => historicalSet.add(cb.value));
+
+      // 3. SCORE CHANNELS BASED ON GOALS + HISTORICAL BOOST
+      const scoredCatalog = CHANNELS_CATALOG.map(ch => {
+        let tot = 0;
+        activeGoals.forEach(g => {
+          tot += ch.scores[g] || 4;
+        });
+        let avg = tot / activeGoals.length;
+        const isHist = historicalSet.has(ch.id);
+        if (isHist) avg *= 1.6;
+        return {
+          ...ch,
+          priority: avg,
+          isHistorical: isHist
+        };
+      });
+
+      // 4. DISCRETE ALLOCATION ENGINE (KNAPSACK + PACING)
+      // Separate fixed vs flexible
+      let fixedChannels = scoredCatalog.filter(c => c.unitType === 'fixed');
+      let flexibleChannels = scoredCatalog.filter(c => c.unitType === 'flexible');
+
+      fixedChannels.sort((a, b) => b.priority - a.priority);
+      flexibleChannels.sort((a, b) => b.priority - a.priority);
+
+      // Reserve at least 35% - 40% of budget for flexible channels (Search, Sponsored Products, PDP)
+      // to ensure campaign can run continuously for 30 days without starving
+      const minFlexShare = duration >= 14 ? 0.38 : 0.25;
+      const maxFixedBudget = rawBudget * (1.0 - minFlexShare);
+
+      let allocatedRows = [];
+      let excludedRows = [];
+      let fixedSpent = 0;
+      let remainingBudget = rawBudget;
+
+      // Allocate Fixed Channels in exact integer multiples of their rate card
+      fixedChannels.forEach(fc => {
+        const unitCost = currentCurrency === 'USD' ? fc.rateUSD : fc.rateNGN;
+        const minReq = currentCurrency === 'USD' ? fc.minBudgetRequiredNGN / FX_RATE : fc.minBudgetRequiredNGN;
+
+        // Check feasibility:
+        // A fixed channel is booked ONLY if total budget meets minReq AND cost fits in available fixed envelope
+        if (rawBudget < minReq || unitCost > rawBudget * 0.35) {
+          excludedRows.push({
+            ...fc,
+            reason: `Standard unit cost (${fmtMoney(unitCost)}) is too high for a ${duration}-day campaign at this budget. Excluded to ensure 30-day spread.`
+          });
+          return;
+        }
+
+        // If it fits in the maxFixedBudget
+        if ((fixedSpent + unitCost) <= maxFixedBudget) {
+          let units = 1;
+
+          // Could we afford 2 units? (e.g. 2 weeks of category floor or 2 weeks of category banner if high priority)
+          if (fc.unitLabel.includes('Week') && duration >= 14 && (fixedSpent + unitCost * 2) <= maxFixedBudget && fc.priority >= 8) {
+            units = 2;
+          }
+
+          const lineCost = unitCost * units;
+          fixedSpent += lineCost;
+          remainingBudget -= lineCost;
+
+          const imps = fc.baseImpsPerUnit * units;
+          const clicks = Math.round(imps * fc.ctr);
+
+          allocatedRows.push({
+            ...fc,
+            unitsBooked: units,
+            bookedVolumeLabel: `${units} ${fc.unitLabel}`,
+            displayRate: `${fmtMoney(unitCost)} / ${fc.unitLabel}`,
+            allocatedBudget: lineCost,
+            estImps: imps,
+            estClicks: clicks,
+            coverageText: `${units * fc.unitDays} Days (${units} ${fc.unitLabel})`,
+            activeDays: fc.activeDayLogic(units, duration)
+          });
+        } else {
+          excludedRows.push({
+            ...fc,
+            reason: `Budget cap reached for fixed placements. Remaining ${fmtMoney(remainingBudget)} directed to flexible performance channels.`
+          });
+        }
+      });
+
+      // Allocate Remaining Budget across Flexible Channels (CPM / CPC)
+      const totFlexPriority = flexibleChannels.reduce((sum, c) => sum + c.priority, 0);
+      flexibleChannels.forEach(fl => {
+        const share = fl.priority / (totFlexPriority || 1);
+        const flBudget = Math.round(remainingBudget * share);
+
+        if (flBudget <= 0) return;
+
+        const rate = currentCurrency === 'USD' ? fl.rateUSD : fl.rateNGN;
+        let imps = 0;
+        let clicks = 0;
+
+        if (fl.unitLabel === 'CPM') {
+          imps = Math.round((flBudget / rate) * 1000);
+          clicks = Math.round(imps * fl.ctr);
+        } else if (fl.unitLabel.includes('CPC')) {
+          clicks = Math.round(flBudget / rate);
+          imps = Math.round(clicks / fl.ctr);
+        }
+
+        allocatedRows.push({
+          ...fl,
+          unitsBooked: null,
+          bookedVolumeLabel: `${duration} Days (Paced)`,
+          displayRate: `${fmtMoney(rate)} / ${fl.unitLabel}`,
+          allocatedBudget: flBudget,
+          estImps: imps,
+          estClicks: clicks,
+          coverageText: `${duration} Days (Continuous)`,
+          activeDays: fl.activeDayLogic(1, duration)
+        });
+      });
+
+      // Reconcile rounding difference to the top flexible channel (e.g. Search or Sponsored Products)
+      const currentSum = allocatedRows.reduce((sum, r) => sum + r.allocatedBudget, 0);
+      const diff = rawBudget - currentSum;
+      if (diff !== 0 && allocatedRows.length > 0) {
+        const topFlex = allocatedRows.find(r => r.unitType === 'flexible');
+        if (topFlex) {
+          topFlex.allocatedBudget += diff;
+          const rate = currentCurrency === 'USD' ? topFlex.rateUSD : topFlex.rateNGN;
+          if (topFlex.unitLabel === 'CPM') {
+            topFlex.estImps = Math.round((topFlex.allocatedBudget / rate) * 1000);
+            topFlex.estClicks = Math.round(topFlex.estImps * topFlex.ctr);
+          } else if (topFlex.unitLabel.includes('CPC')) {
+            topFlex.estClicks = Math.round(topFlex.allocatedBudget / rate);
+            topFlex.estImps = Math.round(topFlex.estClicks / topFlex.ctr);
+          }
+        }
+      }
+
+      currentCalculatedRows = allocatedRows;
+
+      // Update KPI Cards
+      const totalBudgetSpent = allocatedRows.reduce((sum, r) => sum + r.allocatedBudget, 0);
+      const totalImpressions = allocatedRows.reduce((sum, r) => sum + r.estImps, 0);
+      const totalClicks = allocatedRows.reduce((sum, r) => sum + r.estClicks, 0);
+
+      document.getElementById('kpi-budget').innerText = fmtMoney(rawBudget);
+      document.getElementById('kpi-impressions').innerText = totalImpressions.toLocaleString();
+      document.getElementById('kpi-clicks').innerText = totalClicks.toLocaleString();
+      const avgCtr = totalImpressions > 0 ? ((totalClicks / totalImpressions) * 100).toFixed(2) + '%' : '0.00%';
+      document.getElementById('kpi-ctr').innerText = avgCtr;
+
+      // Render Plan Table
+      const tbody = document.getElementById('plan-tbody');
+      tbody.innerHTML = '';
+      allocatedRows.forEach(r => {
+        const tr = document.createElement('tr');
+        const historicalBadge = r.isHistorical ? '<span class="badge-proven">&#128338; PROVEN</span>' : '';
+        const badgeType = r.unitType === 'fixed' 
+          ? `<span class="badge-discrete">${r.bookedVolumeLabel}</span>` 
+          : `<span class="badge-continuous">Flexible CPM/CPC</span>`;
+
+        tr.innerHTML = `
+          <td><span class="tag ${r.tag}">${r.channel}</span></td>
+          <td><strong>${r.placement}</strong>${historicalBadge}</td>
+          <td>${r.obj}</td>
+          <td><span style="font-size:11px; color:#444;">${r.targeting}</span></td>
+          <td style="font-weight:600;">${r.displayRate}</td>
+          <td>${badgeType}</td>
+          <td style="text-align:right; font-weight:700; color:#073763;">${fmtMoney(r.allocatedBudget)}</td>
+          <td style="text-align:right;">${r.estImps.toLocaleString()}</td>
+          <td style="text-align:right;">${r.estClicks.toLocaleString()}</td>
+          <td><span style="font-size:11px; background:#EEF2F7; padding:2px 7px; border-radius:4px; font-weight:600;">${r.coverageText}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('foot-budget').innerText = fmtMoney(totalBudgetSpent);
+      document.getElementById('foot-impressions').innerText = totalImpressions.toLocaleString();
+      document.getElementById('foot-clicks').innerText = totalClicks.toLocaleString();
+
+      // Render Excluded Table
+      const excludedCard = document.getElementById('excluded-card');
+      const excludedTbody = document.getElementById('excluded-tbody');
+      if (excludedRows.length > 0) {
+        excludedCard.style.display = 'block';
+        excludedTbody.innerHTML = '';
+        excludedRows.forEach(ex => {
+          const rateVal = currentCurrency === 'USD' ? ex.rateUSD : ex.rateNGN;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><span class="tag ${ex.tag}">${ex.channel}</span></td>
+            <td><strong>${ex.placement}</strong></td>
+            <td>${fmtMoney(rateVal)} / ${ex.unitLabel}</td>
+            <td style="color:#A00000; font-size:11.5px;">${ex.reason}</td>
+          `;
+          excludedTbody.appendChild(tr);
+        });
+      } else {
+        excludedCard.style.display = 'none';
+      }
+
+      // Render Gantt
+      renderGantt(allocatedRows, duration);
+    }
+
+    function renderGantt(rows, duration) {
+      const thead = document.getElementById('gantt-thead');
+      const tbody = document.getElementById('gantt-tbody');
+
+      let thHTML = '<tr><th style="text-align:left; min-width:180px;">Channel Placement</th>';
+      for (let d = 1; d <= duration; d++) {
+        thHTML += `<th>D${d}</th>`;
+      }
+      thHTML += '</tr>';
+      thead.innerHTML = thHTML;
+
+      tbody.innerHTML = '';
+      rows.forEach(r => {
+        const activeSet = new Set(r.activeDays);
+        let trHTML = `<tr><td style="text-align:left; font-weight:600;">${r.placement}</td>`;
+        for (let d = 1; d <= duration; d++) {
+          if (activeSet.has(d)) {
+            trHTML += `<td class="active-day">&#10003;</td>`;
+          } else {
+            trHTML += `<td class="inactive-day">-</td>`;
+          }
+        }
+        trHTML += '</tr>';
+        tbody.innerHTML += trHTML;
+      });
+    }
+
+    function exportPlanCSV() {
+      const brand = document.getElementById('brand-name').value || 'Brand';
+      let csv = 'Channel,Placement,Objective,Targeting,Unit Rate,Booked Volume,Allocated Budget,Est Impressions,Est Clicks\n';
+      currentCalculatedRows.forEach(r => {
+        csv += `"${r.channel}","${r.placement}","${r.obj}","${r.targeting}","${r.displayRate}","${r.bookedVolumeLabel}",${Math.round(r.allocatedBudget)},${r.estImps},${r.estClicks}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `${brand.replace(/\s+/g, '_')}_Jumia_Media_Plan.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Initialize on load
+    calculatePlan();
+  </script>
+</body>
+</html>
